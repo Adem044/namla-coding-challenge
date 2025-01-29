@@ -15,6 +15,7 @@ import {
 import { Button } from './ui/button';
 
 import Field from './Field';
+import AddButton from './AddButton';
 
 const YamlDocumentsList = () => {
     const parsedYaml = useYamlContext((state) => state.parsedYaml);
@@ -58,10 +59,72 @@ const YamlDocumentsList = () => {
                                     </div>
                                 </div>
 
-                                <Button size="sm" variant="secondary">
-                                    <PlusIcon />
-                                    Insert
-                                </Button>
+                                <AddButton
+                                    items={[
+                                        {
+                                            value: 'allowedTopologies',
+                                            fullPath: '/',
+                                            type: 'object',
+                                        },
+                                        {
+                                            value: 'annotations',
+                                            fullPath: 'metadata',
+                                            type: 'object',
+                                        },
+                                        {
+                                            value: 'creationTimestamp',
+                                            fullPath: 'metadata',
+                                            type: 'string',
+                                        },
+                                        {
+                                            value: 'deletionGracePeriodSeconds',
+                                            fullPath: 'metadata',
+                                            type: 'number',
+                                        },
+                                        {
+                                            value: 'deletionTimestamp',
+                                            fullPath: 'metadata',
+                                            type: 'string',
+                                        },
+                                        {
+                                            value: 'finalizers',
+                                            fullPath: 'metadata',
+                                            type: 'array',
+                                        },
+                                        {
+                                            value: 'generateName',
+                                            fullPath: 'metadata',
+                                            type: 'string',
+                                        },
+                                        {
+                                            value: 'generation',
+                                            fullPath: 'metadata',
+                                            type: 'number',
+                                        },
+                                        {
+                                            value: 'labels',
+                                            fullPath: 'metadata',
+                                            type: 'object',
+                                        },
+                                        {
+                                            value: 'managedFields',
+                                            fullPath: 'metadata',
+                                            type: 'array',
+                                        },
+                                        {
+                                            value: 'isBoolean',
+                                            fullPath: 'metadata',
+                                            type: 'boolean',
+                                        },
+                                    ]}
+                                    index={index}
+                                    shouldShowPath
+                                >
+                                    <Button size="sm" variant="secondary">
+                                        <PlusIcon />
+                                        Insert
+                                    </Button>
+                                </AddButton>
                             </div>
                             {Object.keys(item).map((property) =>
                                 ['apiVersion', 'kind', '_id'].includes(
@@ -116,15 +179,71 @@ const NestedYamlDocumentsList = memo(
                         <div className="flex justify-between items-center w-full pl-2">
                             <div>{property}</div>
                             <div>
-                                {isFirstLevel ? (
-                                    <Button size="sm" variant="secondary">
-                                        <PlusIcon /> Add
-                                    </Button>
-                                ) : (
-                                    <Button size="icon" variant="ghost">
-                                        <PlusIcon className="text-primary" />
-                                    </Button>
-                                )}
+                                <AddButton
+                                    items={[
+                                        {
+                                            value: 'annotations',
+                                            fullPath,
+                                            type: 'object',
+                                        },
+                                        {
+                                            value: 'creationTimestamp',
+                                            fullPath,
+                                            type: 'string',
+                                        },
+                                        {
+                                            value: 'deletionGracePeriodSeconds',
+                                            fullPath,
+                                            type: 'number',
+                                        },
+                                        {
+                                            value: 'deletionTimestamp',
+                                            fullPath,
+                                            type: 'string',
+                                        },
+                                        {
+                                            value: 'finalizers',
+                                            fullPath,
+                                            type: 'array',
+                                        },
+                                        {
+                                            value: 'generateName',
+                                            fullPath,
+                                            type: 'string',
+                                        },
+                                        {
+                                            value: 'generation',
+                                            fullPath,
+                                            type: 'number',
+                                        },
+                                        {
+                                            value: 'labels',
+                                            fullPath,
+                                            type: 'object',
+                                        },
+                                        {
+                                            value: 'managedFields',
+                                            fullPath,
+                                            type: 'array',
+                                        },
+                                        {
+                                            value: 'isBoolean',
+                                            fullPath,
+                                            type: 'boolean',
+                                        },
+                                    ]}
+                                    index={index}
+                                >
+                                    {isFirstLevel ? (
+                                        <Button size="sm" variant="secondary">
+                                            <PlusIcon /> Add
+                                        </Button>
+                                    ) : (
+                                        <Button size="icon" variant="ghost">
+                                            <PlusIcon className="text-primary" />
+                                        </Button>
+                                    )}
+                                </AddButton>
                                 <Button size="icon" variant="ghost">
                                     <TrashIcon color="red" />
                                 </Button>

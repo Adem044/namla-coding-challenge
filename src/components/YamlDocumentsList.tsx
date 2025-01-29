@@ -165,7 +165,7 @@ const NestedYamlDocumentsList = memo(
         fullPath,
         index,
     }: {
-        item: TParsedYaml;
+        item: TParsedYaml | TParsedYaml[];
         property: string;
         fullPath: string;
         index: number;
@@ -188,7 +188,11 @@ const NestedYamlDocumentsList = memo(
                                 <AddButton
                                     items={CONFIGURATIONS.map((config) => ({
                                         ...config,
-                                        fullPath,
+                                        fullPath: Array.isArray(item)
+                                            ? fullPath.concat(
+                                                  `[${item.length}]`,
+                                              )
+                                            : fullPath,
                                     }))}
                                     index={index}
                                 >
@@ -216,7 +220,11 @@ const NestedYamlDocumentsList = memo(
                                     key={property}
                                     property={property}
                                     fullPath={fullPath}
-                                    item={item[property]}
+                                    item={
+                                        Array.isArray(item)
+                                            ? item[+property]
+                                            : item[property]
+                                    }
                                     index={index}
                                 />
                             ))}

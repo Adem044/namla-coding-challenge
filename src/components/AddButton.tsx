@@ -10,6 +10,12 @@ import {
     DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
+const INITIAL_VALUES: Record<string, unknown> = {
+    object: {},
+    array: [],
+    number: 0,
+    boolean: false,
+};
 const AddButton = ({
     items,
     index,
@@ -29,15 +35,7 @@ const AddButton = ({
             updateParsedYaml(
                 index,
                 fullPath === '/' ? value : fullPath.concat('.', value),
-                type === 'object'
-                    ? {}
-                    : type === 'array'
-                    ? []
-                    : type === 'number'
-                    ? 0
-                    : type === 'boolean'
-                    ? false
-                    : '',
+                INITIAL_VALUES[type] ?? '',
             );
         };
 

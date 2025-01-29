@@ -2,7 +2,7 @@ import { memo } from 'react';
 import _ from 'lodash';
 import { PlusIcon } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn, type TParsedYaml } from '@/lib/utils';
 
 import useYamlContext from '@/contexts/YamlContext';
 
@@ -17,6 +17,8 @@ import { Button } from './ui/button';
 import Field from './Field';
 import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
+
+type TPrimitive = string | number | boolean;
 
 const CONFIGURATIONS = [
     {
@@ -62,6 +64,8 @@ const CONFIGURATIONS = [
 ];
 
 const EXCLUDED_KEYS = ['apiVersion', 'kind', '_id'];
+
+const PRIMITIVES = ['string', 'number', 'boolean'];
 
 const YamlDocumentsList = () => {
     const parsedYaml = useYamlContext((state) => state.parsedYaml);
@@ -161,7 +165,7 @@ const NestedYamlDocumentsList = memo(
         fullPath,
         index,
     }: {
-        item: Record<string, unknown>;
+        item: TParsedYaml;
         property: string;
         fullPath: string;
         index: number;
@@ -207,47 +211,57 @@ const NestedYamlDocumentsList = memo(
                     </AccordionTrigger>
                     <AccordionContent>
                         <div className="ml-6 border border-input divide-y-[1px] divide-input border-r-0">
-                            {Object.keys(item ?? {}).map((property) =>
-                                ['string', 'number', 'boolean'].includes(
-                                    typeof item[property],
-                                ) ? (
-                                    <Field
-                                        key={property}
-                                        property={property}
-                                        fullPath={fullPath.concat(
-                                            '.',
-                                            property,
-                                        )}
-                                        value={
-                                            item[property] as
-                                                | string
-                                                | number
-                                                | boolean
-                                        }
-                                        index={index}
-                                    />
-                                ) : (
-                                    <NestedYamlDocumentsList
-                                        key={property}
-                                        item={
-                                            item[property] as Record<
-                                                string,
-                                                unknown
-                                            >
-                                        }
-                                        property={property}
-                                        fullPath={fullPath.concat(
-                                            '.',
-                                            property,
-                                        )}
-                                        index={index}
-                                    />
-                                ),
-                            )}
+                            {Object.keys(item ?? {}).map((property) => (
+                                <NestedYamlDocumentsListItem
+                                    key={property}
+                                    property={property}
+                                    fullPath={fullPath}
+                                    item={item[property]}
+                                    index={index}
+                                />
+                            ))}
                         </div>
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
+        );
+    },
+    (prevProps, nextProps) => {
+        return _.isEqual(prevProps.item, nextProps.item);
+    },
+);
+
+const NestedYamlDocumentsListItem = memo(
+    ({
+        property,
+        fullPath,
+        item,
+        index,
+    }: {
+        property: string;
+        fullPath: string;
+        item: unknown;
+        index: number;
+    }) => {
+        const path = fullPath.concat('.', property);
+        const isPrimitiveValue = PRIMITIVES.includes(typeof item);
+        if (isPrimitiveValue) {
+            return (
+                <Field
+                    property={property}
+                    fullPath={path}
+                    value={item as TPrimitive}
+                    index={index}
+                />
+            );
+        }
+        return (
+            <NestedYamlDocumentsList
+                item={item as TParsedYaml}
+                property={property}
+                fullPath={path}
+                index={index}
+            />
         );
     },
     (prevProps, nextProps) => {

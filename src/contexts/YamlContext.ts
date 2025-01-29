@@ -2,10 +2,10 @@ import _ from 'lodash';
 import { create } from 'zustand';
 import yaml from 'js-yaml';
 
-import { formatParsedYaml } from '@/lib/utils';
+import { formatParsedYaml, type TParsedYaml } from '@/lib/utils';
 
 type TYamlContext = {
-    parsedYaml: Array<Record<string, unknown>>;
+    parsedYaml: Array<TParsedYaml>;
     updateParsedYaml: (index: number, path: string, value?: unknown) => void;
     yamlContent: string;
     updateYamlContent: (yamlContent: string) => void;
@@ -38,9 +38,7 @@ const useYamlContext = create<TYamlContext>()((set) => ({
         set(() => {
             let parsedYaml: TYamlContext['parsedYaml'] = [];
             try {
-                parsedYaml = yaml.loadAll(yamlContent ?? '') as Array<
-                    Record<string, unknown>
-                >;
+                parsedYaml = yaml.loadAll(yamlContent ?? '') as TParsedYaml[];
                 parsedYaml = parsedYaml.map((obj, index) => ({
                     _id: index,
                     ...obj,

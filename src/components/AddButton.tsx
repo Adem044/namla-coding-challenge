@@ -44,7 +44,7 @@ const AddButton = ({
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-            <DropdownMenuContent className="border-none">
+            <DropdownMenuContent className="border-none max-h-60 overflow-y-auto">
                 {items.map(({ value, type, fullPath }) => (
                     <DropdownMenuItem
                         key={value}

@@ -18,12 +18,73 @@ import Field from './Field';
 import AddButton from './AddButton';
 import DeleteButton from './DeleteButton';
 
+const CONFIGURATIONS = [
+    {
+        value: 'annotations',
+        type: 'object',
+    },
+    {
+        value: 'creationTimestamp',
+        type: 'string',
+    },
+    {
+        value: 'deletionGracePeriodSeconds',
+        type: 'number',
+    },
+    {
+        value: 'deletionTimestamp',
+        type: 'string',
+    },
+    {
+        value: 'finalizers',
+        type: 'array',
+    },
+    {
+        value: 'generateName',
+        type: 'string',
+    },
+    {
+        value: 'generation',
+        type: 'number',
+    },
+    {
+        value: 'labels',
+        type: 'object',
+    },
+    {
+        value: 'managedFields',
+        type: 'array',
+    },
+    {
+        value: 'isBoolean',
+        type: 'boolean',
+    },
+];
+
+const EXCLUDED_KEYS = ['apiVersion', 'kind', '_id'];
+
 const YamlDocumentsList = () => {
     const parsedYaml = useYamlContext((state) => state.parsedYaml);
 
     return (
         <Accordion type="multiple" className="space-y-4 p-2">
             {parsedYaml.map((item, index) => {
+                const items = [
+                    {
+                        value: 'allowedTopologies',
+                        fullPath: '/',
+                        type: 'object',
+                    },
+                    ...Object.keys(item)
+                        .filter((property) => !EXCLUDED_KEYS.includes(property))
+                        .map((property) =>
+                            CONFIGURATIONS.map((config) => ({
+                                ...config,
+                                fullPath: property,
+                            })),
+                        )
+                        .flat(),
+                ];
                 return (
                     <AccordionItem
                         key={item._id as number}
@@ -59,63 +120,7 @@ const YamlDocumentsList = () => {
                                 </div>
 
                                 <AddButton
-                                    items={[
-                                        {
-                                            value: 'allowedTopologies',
-                                            fullPath: '/',
-                                            type: 'object',
-                                        },
-                                        {
-                                            value: 'annotations',
-                                            fullPath: 'metadata',
-                                            type: 'object',
-                                        },
-                                        {
-                                            value: 'creationTimestamp',
-                                            fullPath: 'metadata',
-                                            type: 'string',
-                                        },
-                                        {
-                                            value: 'deletionGracePeriodSeconds',
-                                            fullPath: 'metadata',
-                                            type: 'number',
-                                        },
-                                        {
-                                            value: 'deletionTimestamp',
-                                            fullPath: 'metadata',
-                                            type: 'string',
-                                        },
-                                        {
-                                            value: 'finalizers',
-                                            fullPath: 'metadata',
-                                            type: 'array',
-                                        },
-                                        {
-                                            value: 'generateName',
-                                            fullPath: 'metadata',
-                                            type: 'string',
-                                        },
-                                        {
-                                            value: 'generation',
-                                            fullPath: 'metadata',
-                                            type: 'number',
-                                        },
-                                        {
-                                            value: 'labels',
-                                            fullPath: 'metadata',
-                                            type: 'object',
-                                        },
-                                        {
-                                            value: 'managedFields',
-                                            fullPath: 'metadata',
-                                            type: 'array',
-                                        },
-                                        {
-                                            value: 'isBoolean',
-                                            fullPath: 'metadata',
-                                            type: 'boolean',
-                                        },
-                                    ]}
+                                    items={items}
                                     index={index}
                                     shouldShowPath
                                 >
@@ -126,9 +131,7 @@ const YamlDocumentsList = () => {
                                 </AddButton>
                             </div>
                             {Object.keys(item).map((property) =>
-                                ['apiVersion', 'kind', '_id'].includes(
-                                    property,
-                                ) ? null : (
+                                EXCLUDED_KEYS.includes(property) ? null : (
                                     <NestedYamlDocumentsList
                                         key={property}
                                         item={
@@ -179,58 +182,10 @@ const NestedYamlDocumentsList = memo(
                             <div>{property}</div>
                             <div>
                                 <AddButton
-                                    items={[
-                                        {
-                                            value: 'annotations',
-                                            fullPath,
-                                            type: 'object',
-                                        },
-                                        {
-                                            value: 'creationTimestamp',
-                                            fullPath,
-                                            type: 'string',
-                                        },
-                                        {
-                                            value: 'deletionGracePeriodSeconds',
-                                            fullPath,
-                                            type: 'number',
-                                        },
-                                        {
-                                            value: 'deletionTimestamp',
-                                            fullPath,
-                                            type: 'string',
-                                        },
-                                        {
-                                            value: 'finalizers',
-                                            fullPath,
-                                            type: 'array',
-                                        },
-                                        {
-                                            value: 'generateName',
-                                            fullPath,
-                                            type: 'string',
-                                        },
-                                        {
-                                            value: 'generation',
-                                            fullPath,
-                                            type: 'number',
-                                        },
-                                        {
-                                            value: 'labels',
-                                            fullPath,
-                                            type: 'object',
-                                        },
-                                        {
-                                            value: 'managedFields',
-                                            fullPath,
-                                            type: 'array',
-                                        },
-                                        {
-                                            value: 'isBoolean',
-                                            fullPath,
-                                            type: 'boolean',
-                                        },
-                                    ]}
+                                    items={CONFIGURATIONS.map((config) => ({
+                                        ...config,
+                                        fullPath,
+                                    }))}
                                     index={index}
                                 >
                                     {isFirstLevel ? (

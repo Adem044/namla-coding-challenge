@@ -8,6 +8,8 @@ import { Label } from './ui/label';
 import { Checkbox } from './ui/checkbox';
 import { Input } from './ui/input';
 
+import DeleteButton from './DeleteButton';
+
 const Field = ({
     property,
     fullPath,
@@ -54,6 +56,7 @@ const Field = ({
                     type={typeof value === 'number' ? 'number' : 'text'}
                 />
             )}
+            <DeleteButton index={index} fullPath={fullPath} />
         </div>
     );
 };

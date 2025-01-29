@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import _ from 'lodash';
-import { PlusIcon, TrashIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -16,6 +16,7 @@ import { Button } from './ui/button';
 
 import Field from './Field';
 import AddButton from './AddButton';
+import DeleteButton from './DeleteButton';
 
 const YamlDocumentsList = () => {
     const parsedYaml = useYamlContext((state) => state.parsedYaml);
@@ -45,9 +46,7 @@ const YamlDocumentsList = () => {
                                         {_.get(item, 'kind', '') as string}
                                     </div>
                                 </div>
-                                <Button size="icon" variant="ghost">
-                                    <TrashIcon color="red" />
-                                </Button>
+                                <DeleteButton index={index} />
                             </div>
                         </AccordionTrigger>
                         <AccordionContent className="space-y-4">
@@ -244,9 +243,10 @@ const NestedYamlDocumentsList = memo(
                                         </Button>
                                     )}
                                 </AddButton>
-                                <Button size="icon" variant="ghost">
-                                    <TrashIcon color="red" />
-                                </Button>
+                                <DeleteButton
+                                    index={index}
+                                    fullPath={fullPath}
+                                />
                             </div>
                         </div>
                     </AccordionTrigger>

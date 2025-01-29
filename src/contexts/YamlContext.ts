@@ -17,7 +17,18 @@ const useYamlContext = create<TYamlContext>()((set) => ({
     updateParsedYaml: (index, path, value) =>
         set((state) => {
             const newParsedYaml = _.cloneDeep(state.parsedYaml);
-            _.set(newParsedYaml[index] as object, path, value);
+            if (!_.isUndefined(value)) {
+                // update the value
+                _.set(newParsedYaml[index] as object, path, value);
+            } else {
+                if (path) {
+                    // delete nested key
+                    _.unset(newParsedYaml[index], path);
+                } else {
+                    // delete first level object
+                    newParsedYaml.splice(index, 1);
+                }
+            }
             return {
                 parsedYaml: newParsedYaml,
                 yamlContent: formatParsedYaml(newParsedYaml),
